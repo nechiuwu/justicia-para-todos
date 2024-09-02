@@ -54,20 +54,48 @@ form {
     flex-direction: column;
 }
 
-label {
+.label-form {
     margin-top: 10px;
     font-weight: bold;
 }
 
-input, select {
+.input-form,
+.lists {
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
+.descriptions {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+#buttoncontainer {
+    display: inline-block;
+    display: flex;
+    justify-content: center;
+}
+
+.date-form {
+    width: 96%;
+    max-width: 600px;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 button {
     margin-top: 20px;
+    margin-right: 10px;
     padding: 10px;
     background-color: #28a745;
     color: #fff;
@@ -78,6 +106,14 @@ button {
 
 button:hover {
     background-color: #218838;
+}
+
+.hidden {
+    display: none;
+    width: 90%;
+    max-width: 600px;
+    margin-top: 10px 0 0 0;
+    padding: 0;
 }
 
 .message {
