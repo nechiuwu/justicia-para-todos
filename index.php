@@ -1,3 +1,78 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "Mycr8760ne14.";
+$dbname = "justicia_para_todos";
+$port = 3306;
+
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+$conn->set_charset("utf8mb4");
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+$message = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $rut = htmlspecialchars(trim($_POST['rut']), ENT_QUOTES, 'UTF-8');
+    $nombre = htmlspecialchars(trim($_POST['nombre']), ENT_QUOTES, 'UTF-8');
+    $apellido = htmlspecialchars(trim($_POST['apellido']), ENT_QUOTES, 'UTF-8');
+    $domicilio = htmlspecialchars(trim($_POST['domicilio']), ENT_QUOTES, 'UTF-8');
+    $email = htmlspecialchars(trim($_POST['email']), ENT_QUOTES, 'UTF-8');
+    $telefono = htmlspecialchars(trim($_POST['telefono']), ENT_QUOTES, 'UTF-8');
+    $num_caso = htmlspecialchars(trim($_POST['num_caso']), ENT_QUOTES, 'UTF-8');
+    $desc_caso = htmlspecialchars(trim($_POST['desc_caso']), ENT_QUOTES, 'UTF-8');
+    $fecha_inicio = $_POST['fecha_inicio'];
+    $estado_caso = htmlspecialchars(trim($_POST['estado_caso']), ENT_QUOTES, 'UTF-8');
+    if ($estado_caso == 'cerrado') {
+        $desc_sentencia = $_POST['estado_caso'];
+        $fecha_cierre = $_POST['fecha_cierre'];
+    }
+
+    if (0 > strlen($rut) || strlen($rut) > 10) {
+        $message = "<p class='message error'>RUT inválido. Debe tener formato 12345678-9.</p>";
+    } elseif (strlen($domicilio) > 250) {
+        $message = "<p class='message error'>Domicilio debe tener menos de 250 caracteres.</p>";
+    } elseif (strlen($telefono) > 15) {
+        $message = "<p class='message error'>Teléfono debe tener menos de 15 caracteres.</p>";
+    } elseif (empty($desc_caso) || strlen($desc_caso) > 480) {
+        $message = "<p class='message error'>Debe describir el caso (máximo 480 caracteres).</p>";
+    } elseif (empty($fecha_inicio)) {
+        $message = "<p class='message error'>Debe seleccionar fecha de inicio.</p>";
+    } elseif (empty($estado_caso)) {
+        $message = "<p class='message error'>Debe seleccionar estado del caso.</p>";
+    } elseif ($estado_caso == 'cerrado' && (empty($desc_sentencia) || strlen($desc_sentencia) > 480)) {
+        $message = "<p class='message error'>Debe describir la sentencia (máximo 480 caracteres).</p>";
+    } elseif ($estado_caso == 'cerrado' && empty($fecha_cierre)) {
+        $message = "<p class='message error'>Debe seleccionar fecha de cierre.</p>";
+    } else {
+        $sql = "INSERT INTO clientes (rut, nombre, apellido, domicilio, email, telefono, numero_caso, descripcion_caso, fecha_inicio, estado_caso, descripcion_sentencia, fecha_cierre) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $stmt = $conn->prepare($sql);
+
+        if ($stmt === false) {
+            die("Error en la preparación de la consulta: " . $conn->error);
+        }
+
+        $stmt->bind_param("ssssssssssss", $rut, $nombre, $apellido, $domicilio, $email, $telefono, $num_caso, $desc_caso, $fecha_inicio, $estado_caso, $desc_sentencia, $fecha_cierre);
+
+        try {
+            $stmt->execute();
+            $message = "<p class='message success'>Registro creado exitosamente.</p>";
+        } catch (mysqli_sql_exception $e) {
+            $message = "<p class='message error'>Error al crear el registro: " . $e->getMessage() . "</p>";
+        }
+
+        $stmt->close();
+    }
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -22,13 +97,13 @@
         <?= $message; ?>
         <form action="index.php" method="POST">
             <label for="rut" class="label-form">RUT</label>
-            <input type="text" id="rut" name="rut" class="input-form" required pattern="^\d{8}-[\dK]$" title="Formato RUT válido: 12345678-9">
+            <input type="text" id="rut" name="rut" class="input-form" required pattern="^\d{8}-[\dK]$" title="RUT inválido. Debe tener formato 12345678-9">
 
             <label for="nombre" class="label-form">Nombre</label>
-            <input type="text" id="nombre" name="nombre" class="input-form" required pattern="[A-Za-z\s]{2,50}" title="Nombre debe contener entre 2 y 50 caracteres, solo letras y espacios">
+            <input type="text" id="nombre" name="nombre" class="input-form" required pattern="[A-Za-z\s]{2,100}" title="Nombre debe contener entre 2 y 100 caracteres, solo letras y espacios">
 
             <label for="apellido" class="label-form">Apellido</label>
-            <input type="text" id="apellido" name="apellido" class="input-form" required pattern="[A-Za-z\s]{2,50}" title="Apellido debe contener entre 2 y 50 caracteres, solo letras y espacios">
+            <input type="text" id="apellido" name="apellido" class="input-form" required pattern="[A-Za-z\s]{2,100}" title="Apellido debe contener entre 2 y 100 caracteres, solo letras y espacios">
 
             <label for="domicilio" class="label-form">Domicilio</label>
             <input type="text" id="domicilio" name="domicilio" class="input-form" required pattern="^([\p{L}\s]+),\s*(\d+),\s*([\p{L}\s]+)(?:,\s*([\p{L}\d\s]+))?,\s*(\d{5}(?:-\d{4})?)$" title="Domicilio debe contener País, Número, Calle, Departamento/Casa (opcional), Código Postal">
