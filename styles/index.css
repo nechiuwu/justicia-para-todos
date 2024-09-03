@@ -93,6 +93,33 @@ form {
     border-radius: 4px;
 }
 
+table {
+    width: 90%;
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+}
+
+table,
+tr,
+td,
+th {
+    border: 1px solid #218838;
+    border-collapse: collapse;
+}
+
+th {
+    width: 500px;
+    height: 30px;
+    background: #28a745;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+td {
+    text-align: center;
+}
+
 button {
     margin-top: 20px;
     margin-right: 10px;
@@ -114,6 +141,17 @@ button:hover {
     max-width: 600px;
     margin-top: 10px 0 0 0;
     padding: 0;
+}
+
+.links {
+    text-decoration: none;
+    color: #28a745;
+    display: inline-block;
+    margin: 2% 10% 2% 5%;
+}
+
+.button-left {
+    margin-left: 10px;
 }
 
 .message {

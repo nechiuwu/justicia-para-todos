@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<header>
+    <header>
         <nav>
             <ul>
                 <li><a href="index.php">Registro Cliente</a></li>
@@ -17,16 +17,52 @@
             </ul>
         </nav>
     </header>
-    <div class="container">
-        <h1>Editar o Eliminar Cliente</h1>
-        <?= $message; ?>
-        <form action="clientes.php" method="POST">
-            <div id="buttoncontainer">
-                <button type="submit">Editar</button>
-                <button type="submit">Eliminar</button>
-            </div>
-        </form>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>RUT</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Domicilio</th>
+                <th>Correo Electrónico</th>
+                <th>Teléfono</th>
+                <th>Número Caso</th>
+                <th>Descripción Caso</th>
+                <th>Fecha Inicio</th>
+                <th>Estado Caso</th>
+                <th>Descripción Sentencia</th>
+                <th>Fecha Cierre</th>
+                <th>Eliminar</th>
+                <th>Editar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            require('./connection.php');
+            session_start();
+
+            $u = crud::selectClientes();
+            if (isset($_GET['rut'])) {
+                $id = $_GET['rut'];
+                crud::deleteClientes($id);
+                header('location:clientes.php');
+            }
+            if (count($u) > 0) {
+                for ($i = 0; $i < count($u); $i++) {
+                    echo '<tr>';
+                    foreach ($u[$i] as $key => $value) {
+                        echo '<td>' . $value . '</td>';
+                    }
+            ?>
+                    <td><a class="links" href="clientes.php?rut=<?php echo $u[$i]['rut'] ?>">Eliminar</a></td>
+                    <td><a class="links" href="editar-clientes.php?rut=<?php echo $u[$i]['rut'] ?>">Editar</a></td>
+            <?php
+                    echo '</tr>';
+                }
+            }
+            ?>
+        </tbody>
+    </table>
 </body>
 
 </html>

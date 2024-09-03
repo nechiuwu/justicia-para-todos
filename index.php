@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="domicilio" name="domicilio" class="input-form" required pattern="^([\p{L}\s]+),\s*(\d+),\s*([\p{L}\s]+)(?:,\s*([\p{L}\d\s]+))?,\s*(\d{5}(?:-\d{4})?)$" title="Domicilio debe contener País, Número, Calle, Departamento/Casa (opcional), Código Postal">
 
             <label for="email" class="label-form">Correo electrónico</label>
-            <input type="text" id="email" name="email" class="input-form" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Correo electrónico debe contener usuario@dominio">
+            <input type="email" id="email" name="email" class="input-form" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Correo electrónico debe contener usuario@dominio">
 
             <label for="telefono" class="label-form">Teléfono</label>
             <input type="text" id="telefono" name="telefono" class="input-form" required pattern="^\+\d{1,4}\d{1,4}\d{4,14}$" title="Telefono debe contener +CódigoPaísCódigoCiudadNúmeroLocal, ejemplo: +34123456789">
@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <textarea id="desc_sentencia" name="desc_sentencia" class="descriptions" rows="4" cols="50" maxlength="480"></textarea>
 
                 <label for="fecha_cierre" class="label-form">Fecha cierre del caso</label>
-                <input type="date" id="fecha_cierre" name="date-form" class="date-form">
+                <input type="date" id="fecha_cierre" name="fecha_cierre" class="date-form">
             </div>
 
             <button type="submit">Registrar</button>
